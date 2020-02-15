@@ -53,6 +53,10 @@ defmodule FacebookLandingPage do
     find_element(:xpath, "//div[contains(text(), 'First or last names on Facebook')]")
   end
 
+  def short_password_error() do
+    find_element(:xpath, "//div[contains(text(), 'must be at least 6 characters long')]")
+  end
+
   def no_email_error() do
     find_element(:xpath, "//div[contains(text(), 'use this when you log in')]")
   end
@@ -63,6 +67,18 @@ defmodule FacebookLandingPage do
 
   def confirm_email_error() do
     find_element(:xpath, "//div[contains(text(), 'Please re-enter')]")
+  end
+
+  # this should probably go into a helpers module
+  def wait_for_presence(element, current \\ 0, iterations \\ 2) do
+    :timer.sleep(500)
+    current = current + 1
+    present = element_displayed?(element)
+    cond do
+      present -> true
+      current == iterations -> false
+      !present -> wait_for_presence(element, current)
+    end
   end
   
 end
